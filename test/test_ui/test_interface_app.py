@@ -1,96 +1,200 @@
-import logging
-from datetime import datetime
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
-import pytz
 
 from src.ui.interface_app import InterfaceApp
-from src.utils.helpers import add_zero
-from src.utils.styles import PRIMARY_COLOR
-
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+from src.ui.styles import Styles
 
 
-def test_initial_config_tk_app(interface_app: InterfaceApp) -> None:
-    root = interface_app._root
-    root.update()
-
-    title = root.title()
-    geometry = root.geometry().split("+")[0]
-    resizable = root.resizable()
-    config_bg = root.cget("bg")
-
-    assert title == "Weather APP"
-    assert geometry == "900x500"
-    assert resizable == (False, False)
-    assert config_bg == PRIMARY_COLOR
-
-
-def test_set_datetime(interface_app: InterfaceApp, pytz_timezone: pytz.tzfile) -> None:
-    assert not interface_app._label_time.get()
-
-    interface_app._set_datetime(timezone=pytz_timezone)
-
-    time_now_by_timezone = datetime.now(pytz_timezone)
-    hours = time_now_by_timezone.hour
-    minutes = time_now_by_timezone.minute
-
-    if 12 <= hours <= 23:
-        assert (
-            interface_app._label_time.get()
-            == f"{add_zero(hours)}:{add_zero(minutes)} PM"
-        )
-    else:
-        assert (
-            interface_app._label_time.get()
-            == f"{add_zero(hours)}:{add_zero(minutes)} AM"
-        )
-
-
-def test_get_weather_success(interface_app):
-    interface_app._entry_place.set("Buenos Aires")
-
-    fake_location = {"timezone": "UTC", "longitude": -58.38, "latitude": -34.6}
-    fake_weather = {
-        "main": {"temp": 300, "feels_like": 298, "humidity": 60, "pressure": 1015},
-        "wind": {"speed": 4},
-        "weather": [{"description": "sunny"}],
-    }
-
-    with patch.object(
-        interface_app._weather_service,
-        "get_place_information",
-        return_value=fake_location,
-    ), patch.object(
-        interface_app._weather_service,
-        "get_weather_by_location",
-        return_value=fake_weather,
+@pytest.fixture
+def interface_app(mock_root: MagicMock, mock_styles: MagicMock) -> InterfaceApp:
+    with (
+        patch("src.ui.interface_app.MainView") as mock_main_view_class,
+        patch("src.ui.interface_app.WeatherService"),
+        patch("src.ui.interface_app.PhotoImage"),
     ):
-        interface_app._get_weather()
-
-    assert interface_app._label_current_weather.get() == "CURRENT WEATHER"
-    assert interface_app._label_wind_text.get() == "WIND"
-    assert interface_app._label_description_text.get() == "DESCRIPTION"
-    assert interface_app._label_pressure_text.get() == "PRESSURE"
-    assert interface_app._label_humidity_text.get() == "HUMIDITY"
-
-    assert interface_app._label_wind_value.get()
-    assert interface_app._label_humidity_value.get()
-    assert interface_app._label_pressure_value.get()
-    assert interface_app._label_description_value.get()
-    assert interface_app._label_thermal_sensation.get()
-    assert interface_app._label_degrees.get()
+        mock_main_view: MagicMock = MagicMock()
+        mock_main_view.place = MagicMock()
+        mock_main_view_class.return_value = mock_main_view
+        instance: InterfaceApp = InterfaceApp.__new__(InterfaceApp)
+        instance._styles = mock_styles
+        instance._root = mock_root
+        instance._config = MagicMock()
+        instance._main_view = mock_main_view
+        instance._weather_service = MagicMock()
+        return instance
 
 
-def test_get_weather_invalid_entry(interface_app: InterfaceApp) -> None:
-    interface_app._entry_place.set("")
+class TestInterfaceAppInit:
+    def test_stores_styles(self, interface_app: InterfaceApp, mock_styles: MagicMock) -> None:
+        assert interface_app._styles == mock_styles
 
-    with pytest.raises(ValueError) as exc_info:
-        interface_app._get_weather()
+    def test_stores_root(self, interface_app: InterfaceApp, mock_root: MagicMock) -> None:
+        assert interface_app._root == mock_root
 
-    assert (
-        str(exc_info.value) == "You must enter a valid location to check the weather."
-    )
+    def test_title_is_set(self, mock_root: MagicMock, mock_styles: MagicMock) -> None:
+        mock_config: MagicMock = MagicMock()
+        mock_config.API_KEY = "key"
+        mock_config.API_URL = "url"
+
+        with (
+            patch("src.ui.interface_app.MainView") as mock_main_view_class,
+            patch("src.ui.interface_app.WeatherService"),
+            patch("src.ui.interface_app.PhotoImage"),
+        ):
+            mock_main_view_class.return_value.place = MagicMock()
+            InterfaceApp(root=mock_root, config=mock_config, styles=mock_styles)
+
+        mock_root.title.assert_called_once_with("Weather APP")
+
+    def test_geometry_is_set(self, mock_root: MagicMock, mock_styles: MagicMock) -> None:
+        mock_config: MagicMock = MagicMock()
+        mock_config.API_KEY = "key"
+        mock_config.API_URL = "url"
+
+        with (
+            patch("src.ui.interface_app.MainView") as mock_main_view_class,
+            patch("src.ui.interface_app.WeatherService"),
+            patch("src.ui.interface_app.PhotoImage"),
+        ):
+            mock_main_view_class.return_value.place = MagicMock()
+            InterfaceApp(root=mock_root, config=mock_config, styles=mock_styles)
+
+        mock_root.geometry.assert_called_once_with("900x500+300+200")
+
+    def test_is_not_resizable(self, mock_root: MagicMock, mock_styles: MagicMock) -> None:
+        mock_config: MagicMock = MagicMock()
+        mock_config.API_KEY = "key"
+        mock_config.API_URL = "url"
+
+        with (
+            patch("src.ui.interface_app.MainView") as mock_main_view_class,
+            patch("src.ui.interface_app.WeatherService"),
+            patch("src.ui.interface_app.PhotoImage"),
+        ):
+            mock_main_view_class.return_value.place = MagicMock()
+            InterfaceApp(root=mock_root, config=mock_config, styles=mock_styles)
+
+        mock_root.resizable.assert_called_once_with(False, False)
+
+    def test_default_styles_is_styles_instance(self, mock_root: MagicMock) -> None:
+        mock_config: MagicMock = MagicMock()
+        mock_config.API_KEY = "key"
+        mock_config.API_URL = "url"
+
+        with (
+            patch("src.ui.interface_app.MainView") as mock_main_view_class,
+            patch("src.ui.interface_app.WeatherService"),
+            patch("src.ui.interface_app.PhotoImage"),
+        ):
+            mock_main_view_class.return_value.place = MagicMock()
+            app: InterfaceApp = InterfaceApp(root=mock_root, config=mock_config)
+
+        assert isinstance(app._styles, Styles)
+
+    def test_weather_service_is_created_with_api_key_and_url(self, mock_root: MagicMock, mock_styles: MagicMock) -> None:
+        mock_config: MagicMock = MagicMock()
+        mock_config.API_KEY = "my_key"
+        mock_config.API_URL = "http://my.api"
+
+        with (
+            patch("src.ui.interface_app.MainView") as mock_main_view_class,
+            patch("src.ui.interface_app.WeatherService") as mock_weather_service_class,
+            patch("src.ui.interface_app.PhotoImage"),
+        ):
+            mock_main_view_class.return_value.place = MagicMock()
+            InterfaceApp(root=mock_root, config=mock_config, styles=mock_styles)
+
+        mock_weather_service_class.assert_called_once_with(api_key="my_key", api_url="http://my.api")
+
+
+class TestInterfaceAppGetWeather:
+    def test_raises_value_error_when_place_is_empty(self, interface_app: InterfaceApp) -> None:
+        interface_app._main_view.get_place.return_value = ""
+
+        with pytest.raises(ValueError, match="valid location"):
+            interface_app._get_weather()
+
+    def test_set_static_labels_is_called(self, interface_app: InterfaceApp) -> None:
+        interface_app._main_view.get_place.return_value = "London"
+        interface_app._weather_service.get_place_information.return_value = {
+            "timezone": "Europe/London",
+            "longitude": -0.1276,
+            "latitude": 51.5074,
+        }
+        interface_app._weather_service.get_weather_by_location.return_value = {}
+
+        with (
+            patch.object(interface_app, "_set_datetime"),
+            patch("src.ui.interface_app.parse_weather_data", return_value={}),
+        ):
+            interface_app._get_weather()
+
+        interface_app._main_view.set_static_labels.assert_called_once()
+
+    def test_get_place_information_called_with_entry_value(self, interface_app: InterfaceApp) -> None:
+        interface_app._main_view.get_place.return_value = "London"
+        interface_app._weather_service.get_place_information.return_value = {
+            "timezone": "Europe/London",
+            "longitude": -0.1276,
+            "latitude": 51.5074,
+        }
+        interface_app._weather_service.get_weather_by_location.return_value = {}
+
+        with (
+            patch.object(interface_app, "_set_datetime"),
+            patch("src.ui.interface_app.parse_weather_data", return_value={}),
+        ):
+            interface_app._get_weather()
+
+        interface_app._weather_service.get_place_information.assert_called_once_with("London")
+
+    def test_set_weather_is_called_with_parsed_data(self, interface_app: InterfaceApp) -> None:
+        interface_app._main_view.get_place.return_value = "London"
+        interface_app._weather_service.get_place_information.return_value = {
+            "timezone": "Europe/London",
+            "longitude": -0.1276,
+            "latitude": 51.5074,
+        }
+        interface_app._weather_service.get_weather_by_location.return_value = {"raw": "data"}
+        parsed_data: dict = {"temp": 20, "feels_like": 18, "wind": 3.0, "description": "sunny", "humidity": 50, "pressure": 1010}
+
+        with (
+            patch.object(interface_app, "_set_datetime"),
+            patch("src.ui.interface_app.parse_weather_data", return_value=parsed_data),
+        ):
+            interface_app._get_weather()
+
+        interface_app._main_view.set_weather.assert_called_once_with(parsed_data)
+
+
+class TestInterfaceAppSetDatetime:
+    def test_set_time_called_with_formatted_am_time(self, interface_app: InterfaceApp) -> None:
+        mock_timezone: MagicMock = MagicMock()
+        mock_now: MagicMock = MagicMock()
+        mock_now.hour = 9
+        mock_now.minute = 5
+
+        with (
+            patch("src.ui.interface_app.datetime") as mock_datetime,
+            patch("src.ui.interface_app.add_zero", side_effect=lambda v: f"0{v}" if v < 10 else str(v)),
+        ):
+            mock_datetime.now.return_value = mock_now
+            interface_app._set_datetime(timezone=mock_timezone)
+
+        interface_app._main_view.set_time.assert_called_once_with("09:05 AM")
+
+    def test_set_time_called_with_formatted_pm_time(self, interface_app: InterfaceApp) -> None:
+        mock_timezone: MagicMock = MagicMock()
+        mock_now: MagicMock = MagicMock()
+        mock_now.hour = 15
+        mock_now.minute = 30
+
+        with (
+            patch("src.ui.interface_app.datetime") as mock_datetime,
+            patch("src.ui.interface_app.add_zero", side_effect=lambda v: f"0{v}" if v < 10 else str(v)),
+        ):
+            mock_datetime.now.return_value = mock_now
+            interface_app._set_datetime(timezone=mock_timezone)
+
+        interface_app._main_view.set_time.assert_called_once_with("15:30 PM")

@@ -5,17 +5,15 @@ from geopy.exc import GeocoderUnavailable
 from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
 
-from src.core.settings import API_KEY, API_URL
-
 
 class WeatherService:
-    def __init__(self, api_key: str = API_KEY, api_url: str = API_URL):
+    def __init__(self, api_key: str, api_url: str):
         self.api_key = api_key
         self.api_url = api_url
         self.geolocator = Nominatim(user_agent="weather_program")
         self.timezone_finder = TimezoneFinder()
 
-    def get_place_information(self, place: str) -> dict[str, str | float]:
+    def get_place_information(self, place: str) -> dict[str, Any]:
         try:
             location = self.geolocator.geocode(place, timeout=30)
         except GeocoderUnavailable:
@@ -24,9 +22,7 @@ class WeatherService:
         if not location:
             raise ValueError("Location not found.")
 
-        timezone = self.timezone_finder.timezone_at(
-            lng=location.longitude, lat=location.latitude
-        )
+        timezone = self.timezone_finder.timezone_at(lng=location.longitude, lat=location.latitude)
 
         return {
             "timezone": timezone,
@@ -34,9 +30,7 @@ class WeatherService:
             "latitude": location.latitude,
         }
 
-    def get_weather_by_location(
-        self, longitude: float, latitude: float
-    ) -> dict[str, Any]:
+    def get_weather_by_location(self, longitude: float, latitude: float) -> dict[str, Any]:
         if not longitude or not latitude:
             raise ValueError("You must enter a valid longitude and latitude.")
 

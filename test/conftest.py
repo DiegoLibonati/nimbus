@@ -1,39 +1,59 @@
-from test.constants import MOCK_COORDS, MOCK_COUNTRY, MOCK_TIMEZONE
-from tkinter import Tk
+from tkinter import PhotoImage, StringVar
+from unittest.mock import MagicMock
 
-import pytz
-from pytest import fixture
+import pytest
 
-from src.services.weather_service import WeatherService
-from src.ui.interface_app import InterfaceApp
+from src.ui.styles import Styles
 
 
-@fixture
-def interface_app() -> InterfaceApp:
-    root = Tk()
-    return InterfaceApp(root=root)
+@pytest.fixture
+def mock_root() -> MagicMock:
+    root: MagicMock = MagicMock()
+    root.title = MagicMock()
+    root.geometry = MagicMock()
+    root.resizable = MagicMock()
+    root.config = MagicMock()
+    root.columnconfigure = MagicMock()
+    root.rowconfigure = MagicMock()
+    return root
 
 
-@fixture
-def weather_service() -> WeatherService:
-    return WeatherService()
+@pytest.fixture
+def mock_styles() -> MagicMock:
+    styles: MagicMock = MagicMock()
+    styles.PRIMARY_COLOR = "#4c75bd"
+    styles.SECONDARY_COLOR = "#F37878"
+    styles.WHITE_COLOR = "#FFFFFF"
+    styles.BLACK_COLOR = "#000000"
+    styles.FONT_POPPINS_15 = "poppins 15"
+    styles.FONT_POPPINS_16 = "poppins 16"
+    styles.FONT_POPPINS_20 = "poppins 20"
+    styles.FONT_POPPINS_22 = "poppins 22"
+    styles.FONT_POPPINS_40 = "poppins 40"
+    styles.FONT_POPPINS_BOLD_25 = "poppins 25 bold"
+    styles.RELIEF_FLAT = "flat"
+    styles.CURSOR_HAND2 = "hand2"
+    styles.JUSTIFY_CENTER = "center"
+    styles.ANCHOR_CENTER = "center"
+    styles.SIDE_BOTTOM = "bottom"
+    return styles
 
 
-@fixture
-def pytz_timezone(mock_timezone: str) -> pytz.tzfile:
-    return pytz.timezone(mock_timezone)
+@pytest.fixture
+def real_styles() -> Styles:
+    return Styles()
 
 
-@fixture
-def mock_timezone() -> str:
-    return MOCK_TIMEZONE
+@pytest.fixture
+def mock_on_search() -> MagicMock:
+    return MagicMock()
 
 
-@fixture
-def mock_country() -> str:
-    return MOCK_COUNTRY
+@pytest.fixture
+def mock_img() -> MagicMock:
+    return MagicMock(spec=PhotoImage)
 
 
-@fixture
-def mock_coords() -> dict[str, float]:
-    return MOCK_COORDS
+@pytest.fixture
+def variable() -> MagicMock:
+    return MagicMock(spec=StringVar)

@@ -1,0 +1,41 @@
+[project]
+name = "weather-program"
+version = "1.0.0"
+description = "I made a python program using tkinter as user interface. This program makes requests to a free weather API. We will have to pass the name of the city or country to collect different information. It will show the current weather, the time, the wind chill, the temperature, the wind, the humidity, the description and the pressure."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = "."
+testpaths = ["test"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+log_cli = true
+log_cli_level = "WARNING"
+addopts = "-v --tb=short"
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::PendingDeprecationWarning",
+    "ignore::pytest.PytestCollectionWarning",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+]
+env = [
+    "API_KEY=YOUR_API_KEY",
+    "API_URL=https://api.openweathermap.org/data/2.5"
+]
+
+[tool.ruff]
+line-length = 160
+exclude = [".git", "__pycache__", "env", "venv"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP"]
+ignore = ["E203"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
