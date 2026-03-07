@@ -102,9 +102,13 @@ Alternatively, you can run the helper script: `./build.sh`
 ## Env Keys
 
 1. `ENVIRONMENT`: Defines the application environment. Accepts `development`, `production`, or `testing`.
+2. `API_KEY`: Your api key from api.openweathermap.
+3. `API_URL`: Url from api.openweathermap.org.
 
 ```
 ENVIRONMENT=development
+API_KEY=YOUR_API_KEY
+API_URL=https://api.openweathermap.org/data/2.5
 ```
 
 ## Known Issues
