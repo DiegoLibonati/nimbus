@@ -4,6 +4,7 @@ from tkinter import PhotoImage, Tk
 import pytz
 
 from src.configs.default_config import DefaultConfig
+from src.constants.messages import MESSAGE_ERROR_NOT_VALID_LOCATION
 from src.constants.paths import PATH_BOX, PATH_LOGO, PATH_SEARCH, PATH_SEARCH_ICON
 from src.services.weather_service import WeatherService
 from src.ui.styles import Styles
@@ -42,7 +43,7 @@ class InterfaceApp:
     def _get_weather(self) -> None:
         entry_place_value = self._main_view.get_place()
         if not entry_place_value:
-            raise ValueError("You must enter a valid location to check the weather.")
+            raise ValueError(MESSAGE_ERROR_NOT_VALID_LOCATION)
 
         self._main_view.set_static_labels()
 
