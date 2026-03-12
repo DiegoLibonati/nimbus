@@ -6,11 +6,12 @@ from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
 
 from src.constants.messages import (
-    MESSAGE_ERROR_API_KEY_NOT_FOUND,
     MESSAGE_ERROR_GEOCODING_SERVICE_UNAVAILABLE,
-    MESSAGE_ERROR_LOCATION_NOT_FOUND,
-    MESSAGE_ERROR_NOT_VALID_LATITUDE_AND_LONGITUDE,
+    MESSAGE_NOT_FOUND_API_KEY,
+    MESSAGE_NOT_FOUND_LOCATION,
+    MESSAGE_NOT_VALID_LATITUDE_AND_LONGITUDE,
 )
+from src.utils.dialogs import InternalDialogError, NotFoundDialogError, ValidationDialogError
 
 
 class WeatherService:
@@ -24,10 +25,12 @@ class WeatherService:
         try:
             location = self.geolocator.geocode(place, timeout=30)
         except GeocoderUnavailable:
-            raise ValueError(MESSAGE_ERROR_GEOCODING_SERVICE_UNAVAILABLE)
+            InternalDialogError(message=MESSAGE_ERROR_GEOCODING_SERVICE_UNAVAILABLE).dialog()
+            return
 
         if not location:
-            raise ValueError(MESSAGE_ERROR_LOCATION_NOT_FOUND)
+            NotFoundDialogError(message=MESSAGE_NOT_FOUND_LOCATION).dialog()
+            return
 
         timezone = self.timezone_finder.timezone_at(lng=location.longitude, lat=location.latitude)
 
@@ -39,10 +42,12 @@ class WeatherService:
 
     def get_weather_by_location(self, longitude: float, latitude: float) -> dict[str, Any]:
         if not longitude or not latitude:
-            raise ValueError(MESSAGE_ERROR_NOT_VALID_LATITUDE_AND_LONGITUDE)
+            ValidationDialogError(message=MESSAGE_NOT_VALID_LATITUDE_AND_LONGITUDE).dialog()
+            return
 
         if not self.api_key:
-            raise ValueError(MESSAGE_ERROR_API_KEY_NOT_FOUND)
+            InternalDialogError(message=MESSAGE_NOT_FOUND_API_KEY).dialog()
+            return
 
         url = f"{self.api_url}/weather?lat={latitude}&lon={longitude}&appid={self.api_key}"
 

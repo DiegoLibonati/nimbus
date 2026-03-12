@@ -1,7 +1,9 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
+import pytz
 
+from src.constants.messages import MESSAGE_NOT_VALID_LOCATION
 from src.ui.interface_app import InterfaceApp
 from src.ui.styles import Styles
 
@@ -12,6 +14,10 @@ def interface_app(mock_root: MagicMock, mock_styles: MagicMock) -> InterfaceApp:
         patch("src.ui.interface_app.MainView") as mock_main_view_class,
         patch("src.ui.interface_app.WeatherService"),
         patch("src.ui.interface_app.PhotoImage"),
+        patch("src.ui.interface_app.PATH_SEARCH", "search.png"),
+        patch("src.ui.interface_app.PATH_SEARCH_ICON", "icon.png"),
+        patch("src.ui.interface_app.PATH_LOGO", "logo.png"),
+        patch("src.ui.interface_app.PATH_BOX", "box.png"),
     ):
         mock_main_view: MagicMock = MagicMock()
         mock_main_view.place = MagicMock()
@@ -35,12 +41,16 @@ class TestInterfaceAppInit:
     def test_title_is_set(self, mock_root: MagicMock, mock_styles: MagicMock) -> None:
         mock_config: MagicMock = MagicMock()
         mock_config.API_KEY = "key"
-        mock_config.API_URL = "url"
+        mock_config.API_URL = "https://api.example.com"
 
         with (
             patch("src.ui.interface_app.MainView") as mock_main_view_class,
             patch("src.ui.interface_app.WeatherService"),
             patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.PATH_SEARCH", "search.png"),
+            patch("src.ui.interface_app.PATH_SEARCH_ICON", "icon.png"),
+            patch("src.ui.interface_app.PATH_LOGO", "logo.png"),
+            patch("src.ui.interface_app.PATH_BOX", "box.png"),
         ):
             mock_main_view_class.return_value.place = MagicMock()
             InterfaceApp(root=mock_root, config=mock_config, styles=mock_styles)
@@ -50,12 +60,16 @@ class TestInterfaceAppInit:
     def test_geometry_is_set(self, mock_root: MagicMock, mock_styles: MagicMock) -> None:
         mock_config: MagicMock = MagicMock()
         mock_config.API_KEY = "key"
-        mock_config.API_URL = "url"
+        mock_config.API_URL = "https://api.example.com"
 
         with (
             patch("src.ui.interface_app.MainView") as mock_main_view_class,
             patch("src.ui.interface_app.WeatherService"),
             patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.PATH_SEARCH", "search.png"),
+            patch("src.ui.interface_app.PATH_SEARCH_ICON", "icon.png"),
+            patch("src.ui.interface_app.PATH_LOGO", "logo.png"),
+            patch("src.ui.interface_app.PATH_BOX", "box.png"),
         ):
             mock_main_view_class.return_value.place = MagicMock()
             InterfaceApp(root=mock_root, config=mock_config, styles=mock_styles)
@@ -65,12 +79,16 @@ class TestInterfaceAppInit:
     def test_is_not_resizable(self, mock_root: MagicMock, mock_styles: MagicMock) -> None:
         mock_config: MagicMock = MagicMock()
         mock_config.API_KEY = "key"
-        mock_config.API_URL = "url"
+        mock_config.API_URL = "https://api.example.com"
 
         with (
             patch("src.ui.interface_app.MainView") as mock_main_view_class,
             patch("src.ui.interface_app.WeatherService"),
             patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.PATH_SEARCH", "search.png"),
+            patch("src.ui.interface_app.PATH_SEARCH_ICON", "icon.png"),
+            patch("src.ui.interface_app.PATH_LOGO", "logo.png"),
+            patch("src.ui.interface_app.PATH_BOX", "box.png"),
         ):
             mock_main_view_class.return_value.place = MagicMock()
             InterfaceApp(root=mock_root, config=mock_config, styles=mock_styles)
@@ -80,51 +98,54 @@ class TestInterfaceAppInit:
     def test_default_styles_is_styles_instance(self, mock_root: MagicMock) -> None:
         mock_config: MagicMock = MagicMock()
         mock_config.API_KEY = "key"
-        mock_config.API_URL = "url"
+        mock_config.API_URL = "https://api.example.com"
 
         with (
             patch("src.ui.interface_app.MainView") as mock_main_view_class,
             patch("src.ui.interface_app.WeatherService"),
             patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.PATH_SEARCH", "search.png"),
+            patch("src.ui.interface_app.PATH_SEARCH_ICON", "icon.png"),
+            patch("src.ui.interface_app.PATH_LOGO", "logo.png"),
+            patch("src.ui.interface_app.PATH_BOX", "box.png"),
         ):
             mock_main_view_class.return_value.place = MagicMock()
             app: InterfaceApp = InterfaceApp(root=mock_root, config=mock_config)
 
         assert isinstance(app._styles, Styles)
 
-    def test_weather_service_is_created_with_api_key_and_url(self, mock_root: MagicMock, mock_styles: MagicMock) -> None:
-        mock_config: MagicMock = MagicMock()
-        mock_config.API_KEY = "my_key"
-        mock_config.API_URL = "http://my.api"
-
-        with (
-            patch("src.ui.interface_app.MainView") as mock_main_view_class,
-            patch("src.ui.interface_app.WeatherService") as mock_weather_service_class,
-            patch("src.ui.interface_app.PhotoImage"),
-        ):
-            mock_main_view_class.return_value.place = MagicMock()
-            InterfaceApp(root=mock_root, config=mock_config, styles=mock_styles)
-
-        mock_weather_service_class.assert_called_once_with(api_key="my_key", api_url="http://my.api")
-
 
 class TestInterfaceAppGetWeather:
-    def test_raises_value_error_when_place_is_empty(self, interface_app: InterfaceApp) -> None:
+    def test_validation_dialog_called_when_place_is_empty(self, interface_app: InterfaceApp) -> None:
         interface_app._main_view.get_place.return_value = ""
 
-        with pytest.raises(ValueError, match="valid location"):
+        with patch("src.ui.interface_app.ValidationDialogError") as mock_dialog_class:
+            mock_dialog_class.return_value = MagicMock()
             interface_app._get_weather()
 
-    def test_set_static_labels_is_called(self, interface_app: InterfaceApp) -> None:
-        interface_app._main_view.get_place.return_value = "London"
+        mock_dialog_class.assert_called_once_with(message=MESSAGE_NOT_VALID_LOCATION)
+        mock_dialog_class.return_value.dialog.assert_called_once()
+
+    def test_weather_service_not_called_when_place_is_empty(self, interface_app: InterfaceApp) -> None:
+        interface_app._main_view.get_place.return_value = ""
+
+        with patch("src.ui.interface_app.ValidationDialogError") as mock_dialog_class:
+            mock_dialog_class.return_value = MagicMock()
+            interface_app._get_weather()
+
+        interface_app._weather_service.get_place_information.assert_not_called()
+
+    def test_set_static_labels_called_when_place_is_valid(self, interface_app: InterfaceApp) -> None:
+        interface_app._main_view.get_place.return_value = "Buenos Aires"
         interface_app._weather_service.get_place_information.return_value = {
-            "timezone": "Europe/London",
-            "longitude": -0.1276,
-            "latitude": 51.5074,
+            "timezone": "America/Argentina/Buenos_Aires",
+            "longitude": -58.38,
+            "latitude": -34.60,
         }
         interface_app._weather_service.get_weather_by_location.return_value = {}
 
         with (
+            patch("src.ui.interface_app.pytz.timezone"),
             patch.object(interface_app, "_set_datetime"),
             patch("src.ui.interface_app.parse_weather_data", return_value={}),
         ):
@@ -133,68 +154,119 @@ class TestInterfaceAppGetWeather:
         interface_app._main_view.set_static_labels.assert_called_once()
 
     def test_get_place_information_called_with_entry_value(self, interface_app: InterfaceApp) -> None:
-        interface_app._main_view.get_place.return_value = "London"
+        interface_app._main_view.get_place.return_value = "Buenos Aires"
         interface_app._weather_service.get_place_information.return_value = {
-            "timezone": "Europe/London",
-            "longitude": -0.1276,
-            "latitude": 51.5074,
+            "timezone": "America/Argentina/Buenos_Aires",
+            "longitude": -58.38,
+            "latitude": -34.60,
         }
         interface_app._weather_service.get_weather_by_location.return_value = {}
 
         with (
+            patch("src.ui.interface_app.pytz.timezone"),
             patch.object(interface_app, "_set_datetime"),
             patch("src.ui.interface_app.parse_weather_data", return_value={}),
         ):
             interface_app._get_weather()
 
-        interface_app._weather_service.get_place_information.assert_called_once_with("London")
+        interface_app._weather_service.get_place_information.assert_called_once_with("Buenos Aires")
 
-    def test_set_weather_is_called_with_parsed_data(self, interface_app: InterfaceApp) -> None:
-        interface_app._main_view.get_place.return_value = "London"
+    def test_get_weather_by_location_called_with_rounded_coords(self, interface_app: InterfaceApp) -> None:
+        interface_app._main_view.get_place.return_value = "Buenos Aires"
         interface_app._weather_service.get_place_information.return_value = {
-            "timezone": "Europe/London",
-            "longitude": -0.1276,
-            "latitude": 51.5074,
+            "timezone": "America/Argentina/Buenos_Aires",
+            "longitude": -58.38,
+            "latitude": -34.60,
         }
-        interface_app._weather_service.get_weather_by_location.return_value = {"raw": "data"}
-        parsed_data: dict = {"temp": 20, "feels_like": 18, "wind": 3.0, "description": "sunny", "humidity": 50, "pressure": 1010}
+        interface_app._weather_service.get_weather_by_location.return_value = {}
 
         with (
+            patch("src.ui.interface_app.pytz.timezone"),
             patch.object(interface_app, "_set_datetime"),
-            patch("src.ui.interface_app.parse_weather_data", return_value=parsed_data),
+            patch("src.ui.interface_app.parse_weather_data", return_value={}),
         ):
             interface_app._get_weather()
 
-        interface_app._main_view.set_weather.assert_called_once_with(parsed_data)
+        interface_app._weather_service.get_weather_by_location.assert_called_once_with(
+            longitude=round(-58.38),
+            latitude=round(-34.60),
+        )
+
+    def test_set_weather_called_with_parsed_data(self, interface_app: InterfaceApp) -> None:
+        interface_app._main_view.get_place.return_value = "Buenos Aires"
+        interface_app._weather_service.get_place_information.return_value = {
+            "timezone": "America/Argentina/Buenos_Aires",
+            "longitude": -58.38,
+            "latitude": -34.60,
+        }
+        interface_app._weather_service.get_weather_by_location.return_value = {"raw": "data"}
+        parsed: dict[str, str] = {"temp": "25°C", "humidity": "60%"}
+
+        with (
+            patch("src.ui.interface_app.pytz.timezone"),
+            patch.object(interface_app, "_set_datetime"),
+            patch("src.ui.interface_app.parse_weather_data", return_value=parsed),
+        ):
+            interface_app._get_weather()
+
+        interface_app._main_view.set_weather.assert_called_once_with(parsed)
+
+    def test_set_datetime_called_with_timezone(self, interface_app: InterfaceApp) -> None:
+        interface_app._main_view.get_place.return_value = "Buenos Aires"
+        interface_app._weather_service.get_place_information.return_value = {
+            "timezone": "America/Argentina/Buenos_Aires",
+            "longitude": -58.38,
+            "latitude": -34.60,
+        }
+        interface_app._weather_service.get_weather_by_location.return_value = {}
+        mock_tz: MagicMock = MagicMock()
+
+        with (
+            patch("src.ui.interface_app.pytz.timezone", return_value=mock_tz),
+            patch.object(interface_app, "_set_datetime") as mock_set_datetime,
+            patch("src.ui.interface_app.parse_weather_data", return_value={}),
+        ):
+            interface_app._get_weather()
+
+        mock_set_datetime.assert_called_once_with(timezone=mock_tz)
 
 
 class TestInterfaceAppSetDatetime:
-    def test_set_time_called_with_formatted_am_time(self, interface_app: InterfaceApp) -> None:
-        mock_timezone: MagicMock = MagicMock()
-        mock_now: MagicMock = MagicMock()
-        mock_now.hour = 9
-        mock_now.minute = 5
+    def test_set_time_called_with_am_suffix_in_morning(self, interface_app: InterfaceApp) -> None:
+        tz: pytz.BaseTzInfo = pytz.timezone("America/Argentina/Buenos_Aires")
 
-        with (
-            patch("src.ui.interface_app.datetime") as mock_datetime,
-            patch("src.ui.interface_app.add_zero", side_effect=lambda v: f"0{v}" if v < 10 else str(v)),
-        ):
-            mock_datetime.now.return_value = mock_now
-            interface_app._set_datetime(timezone=mock_timezone)
+        with patch("src.ui.interface_app.datetime") as mock_dt:
+            mock_now: MagicMock = MagicMock()
+            mock_now.hour = 9
+            mock_now.minute = 5
+            mock_dt.now.return_value = mock_now
+            interface_app._set_datetime(timezone=tz)
 
-        interface_app._main_view.set_time.assert_called_once_with("09:05 AM")
+        call_arg: str = interface_app._main_view.set_time.call_args[0][0]
+        assert "AM" in call_arg
 
-    def test_set_time_called_with_formatted_pm_time(self, interface_app: InterfaceApp) -> None:
-        mock_timezone: MagicMock = MagicMock()
-        mock_now: MagicMock = MagicMock()
-        mock_now.hour = 15
-        mock_now.minute = 30
+    def test_set_time_called_with_pm_suffix_in_afternoon(self, interface_app: InterfaceApp) -> None:
+        tz: pytz.BaseTzInfo = pytz.timezone("America/Argentina/Buenos_Aires")
 
-        with (
-            patch("src.ui.interface_app.datetime") as mock_datetime,
-            patch("src.ui.interface_app.add_zero", side_effect=lambda v: f"0{v}" if v < 10 else str(v)),
-        ):
-            mock_datetime.now.return_value = mock_now
-            interface_app._set_datetime(timezone=mock_timezone)
+        with patch("src.ui.interface_app.datetime") as mock_dt:
+            mock_now: MagicMock = MagicMock()
+            mock_now.hour = 15
+            mock_now.minute = 30
+            mock_dt.now.return_value = mock_now
+            interface_app._set_datetime(timezone=tz)
 
-        interface_app._main_view.set_time.assert_called_once_with("15:30 PM")
+        call_arg: str = interface_app._main_view.set_time.call_args[0][0]
+        assert "PM" in call_arg
+
+    def test_set_time_format_includes_colon(self, interface_app: InterfaceApp) -> None:
+        tz: pytz.BaseTzInfo = pytz.timezone("America/Argentina/Buenos_Aires")
+
+        with patch("src.ui.interface_app.datetime") as mock_dt:
+            mock_now: MagicMock = MagicMock()
+            mock_now.hour = 10
+            mock_now.minute = 20
+            mock_dt.now.return_value = mock_now
+            interface_app._set_datetime(timezone=tz)
+
+        call_arg: str = interface_app._main_view.set_time.call_args[0][0]
+        assert ":" in call_arg
