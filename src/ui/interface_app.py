@@ -43,6 +43,7 @@ class InterfaceApp:
 
     def _get_weather(self) -> None:
         entry_place_value = self._main_view.get_place()
+
         if not entry_place_value:
             ValidationDialogError(message=MESSAGE_NOT_VALID_LOCATION).dialog()
             return
@@ -50,6 +51,10 @@ class InterfaceApp:
         self._main_view.set_static_labels()
 
         location = self._weather_service.get_place_information(entry_place_value)
+
+        if not location:
+            return
+
         timezone = pytz.timezone(location["timezone"])
 
         self._set_datetime(timezone=timezone)
@@ -58,6 +63,10 @@ class InterfaceApp:
             longitude=round(location["longitude"]),
             latitude=round(location["latitude"]),
         )
+
+        if not weather_data:
+            return
+
         parsed = parse_weather_data(weather_data)
 
         self._main_view.set_weather(parsed)

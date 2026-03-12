@@ -21,16 +21,16 @@ class WeatherService:
         self.geolocator = Nominatim(user_agent="weather_program")
         self.timezone_finder = TimezoneFinder()
 
-    def get_place_information(self, place: str) -> dict[str, Any]:
+    def get_place_information(self, place: str) -> dict[str, Any] | None:
         try:
             location = self.geolocator.geocode(place, timeout=30)
         except GeocoderUnavailable:
             InternalDialogError(message=MESSAGE_ERROR_GEOCODING_SERVICE_UNAVAILABLE).dialog()
-            return
+            return None
 
         if not location:
             NotFoundDialogError(message=MESSAGE_NOT_FOUND_LOCATION).dialog()
-            return
+            return None
 
         timezone = self.timezone_finder.timezone_at(lng=location.longitude, lat=location.latitude)
 
@@ -40,14 +40,14 @@ class WeatherService:
             "latitude": location.latitude,
         }
 
-    def get_weather_by_location(self, longitude: float, latitude: float) -> dict[str, Any]:
+    def get_weather_by_location(self, longitude: float, latitude: float) -> dict[str, Any] | None:
         if not longitude or not latitude:
             ValidationDialogError(message=MESSAGE_NOT_VALID_LATITUDE_AND_LONGITUDE).dialog()
-            return
+            return None
 
         if not self.api_key:
             InternalDialogError(message=MESSAGE_NOT_FOUND_API_KEY).dialog()
-            return
+            return None
 
         url = f"{self.api_url}/weather?lat={latitude}&lon={longitude}&appid={self.api_key}"
 
