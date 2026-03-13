@@ -45,8 +45,7 @@ class InterfaceApp:
         entry_place_value = self._main_view.get_place()
 
         if not entry_place_value:
-            ValidationDialogError(message=MESSAGE_NOT_VALID_LOCATION).dialog()
-            return
+            raise ValidationDialogError(message=MESSAGE_NOT_VALID_LOCATION)
 
         self._main_view.set_static_labels()
 
