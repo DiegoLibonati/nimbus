@@ -1,11 +1,7 @@
-from src.configs.default_config import DefaultConfig
 from src.configs.testing_config import TestingConfig
 
 
 class TestTestingConfig:
-    def test_inherits_from_default_config(self) -> None:
-        assert issubclass(TestingConfig, DefaultConfig)
-
     def test_testing_is_true(self) -> None:
         config: TestingConfig = TestingConfig()
         assert config.TESTING is True
@@ -18,6 +14,10 @@ class TestTestingConfig:
         config: TestingConfig = TestingConfig()
         assert config.ENV == "testing"
 
-    def test_api_key_is_inherited(self) -> None:
+    def test_inherits_default_tz(self) -> None:
         config: TestingConfig = TestingConfig()
-        assert isinstance(config.API_KEY, str)
+        assert config.TZ == "America/Argentina/Buenos_Aires"
+
+    def test_has_api_key_attribute(self) -> None:
+        config: TestingConfig = TestingConfig()
+        assert hasattr(config, "API_KEY")

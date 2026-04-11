@@ -68,11 +68,7 @@ pyinstaller==6.16.0
 
 ## Portfolio Link
 
-[`https://www.diegolibonati.com.ar/#/project/Weather-Program`](https://www.diegolibonati.com.ar/#/project/Weather-Program)
-
-## Video
-
-https://user-images.githubusercontent.com/99032604/199621088-7b9f342a-5118-4910-b706-8e04ca3e5338.mp4
+[`https://www.diegolibonati.com.ar/#/project/tkinter-weather-app`](https://www.diegolibonati.com.ar/#/project/tkinter-weather-app)
 
 ## Testing
 
