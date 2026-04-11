@@ -1,4 +1,4 @@
-# Weather Program
+# Tkinter Weather App
 
 ## Educational Purpose
 
