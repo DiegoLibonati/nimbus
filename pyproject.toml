@@ -1,7 +1,7 @@
 [project]
-name = "tkinter-weather-app"
+name = "nimbus"
 version = "1.0.0"
-description = "I made a python program using tkinter as user interface. This program makes requests to a free weather API. We will have to pass the name of the city or country to collect different information. It will show the current weather, the time, the wind chill, the temperature, the wind, the humidity, the description and the pressure."
+description = "**Nimbus** is a desktop weather application built with Python and Tkinter that lets you look up real-time weather conditions for any city in the world. You type a city name into the search bar, and the app resolves its coordinates using the OpenStreetMap Nominatim geocoding service, then fetches live atmospheric data from the OpenWeatherMap REST API."
 requires-python = ">=3.11"
 
 [tool.pytest.ini_options]

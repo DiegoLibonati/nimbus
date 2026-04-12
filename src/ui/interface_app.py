@@ -18,7 +18,7 @@ class InterfaceApp:
         self._styles = styles
         self._config = config
         self._root = root
-        self._root.title("Weather APP")
+        self._root.title("Nimbus")
         self._root.geometry("900x500+300+200")
         self._root.resizable(False, False)
         self._root.config(background=self._styles.PRIMARY_COLOR)

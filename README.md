@@ -1,4 +1,4 @@
-# Tkinter Weather App
+# Nimbus
 
 ## Educational Purpose
 
@@ -24,7 +24,11 @@ The main goal is to explore and demonstrate best practices, patterns, and techno
 
 ## Description
 
-I made a python program using tkinter as user interface. This program makes requests to a free weather API. We will have to pass the name of the city or country to collect different information. It will show the current weather, the time, the wind chill, the temperature, the wind, the humidity, the description and the pressure.
+**Nimbus** is a desktop weather application built with Python and Tkinter that lets you look up real-time weather conditions for any city in the world. You type a city name into the search bar, and the app resolves its coordinates using the OpenStreetMap Nominatim geocoding service, then fetches live atmospheric data from the OpenWeatherMap REST API.
+
+The results panel displays a comprehensive snapshot of current conditions: temperature (converted from Kelvin to Celsius), wind chill/feels-like temperature, humidity percentage, atmospheric pressure, wind speed, a human-readable weather description, and the local time at the searched location — accounting for the city's own timezone rather than the system clock.
+
+Under the hood, the app follows a clean layered architecture: a `WeatherService` handles all external HTTP communication and geocoding logic, typed dialog exceptions bubble user-facing errors up through a global Tkinter exception handler, and a configuration system driven by environment variables (`DefaultConfig` → `DevelopmentConfig` / `ProductionConfig` / `TestingConfig`) keeps environment-specific settings cleanly separated. Assets and paths are resolved to work both in normal Python execution and inside a PyInstaller-bundled executable, so the app can be shipped as a single `.exe` on Windows or a standalone binary on Linux/Mac without any Python installation required on the target machine.
 
 ## Technologies used
 
@@ -68,7 +72,7 @@ pyinstaller==6.16.0
 
 ## Portfolio Link
 
-[`https://www.diegolibonati.com.ar/#/project/tkinter-weather-app`](https://www.diegolibonati.com.ar/#/project/tkinter-weather-app)
+[`https://www.diegolibonati.com.ar/#/project/nimbus`](https://www.diegolibonati.com.ar/#/project/nimbus)
 
 ## Testing
 
