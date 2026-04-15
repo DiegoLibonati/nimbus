@@ -18,7 +18,7 @@ class WeatherService:
     def __init__(self, api_key: str, api_url: str):
         self.api_key = api_key
         self.api_url = api_url
-        self.geolocator = Nominatim(user_agent="weather_program")
+        self.geolocator = Nominatim(user_agent="nimbus")
         self.timezone_finder = TimezoneFinder()
 
     def get_place_information(self, place: str) -> dict[str, Any]:
