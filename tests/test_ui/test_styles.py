@@ -48,3 +48,18 @@ class TestStyles:
 
     def test_cursor_hand2(self) -> None:
         assert Styles.CURSOR_HAND2 == "hand2"
+
+    def test_font_poppins_14(self) -> None:
+        assert Styles.FONT_POPPINS_14 == "poppins 14"
+
+    def test_font_poppins_15(self) -> None:
+        assert Styles.FONT_POPPINS_15 == "poppins 15"
+
+    def test_font_poppins_16(self) -> None:
+        assert Styles.FONT_POPPINS_16 == "poppins 16"
+
+    def test_font_poppins_20(self) -> None:
+        assert Styles.FONT_POPPINS_20 == "poppins 20"
+
+    def test_font_poppins_22(self) -> None:
+        assert Styles.FONT_POPPINS_22 == "poppins 22"

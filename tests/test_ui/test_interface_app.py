@@ -1,4 +1,5 @@
 import tkinter as tk
+from typing import Any
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -108,3 +109,72 @@ class TestInterfaceApp:
             mock_dt.now.return_value = mock_now
             app._set_datetime(timezone=tz)
             mock_view.set_time.assert_called_once_with("12:00 PM")
+
+    def test_set_datetime_boundary_hour_23_is_pm(self, root: tk.Tk) -> None:
+        config: DefaultConfig = DefaultConfig()
+        mock_view: MagicMock = MagicMock()
+        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+            app: InterfaceApp = InterfaceApp(root=root, config=config)
+
+        tz = pytz.timezone("UTC")
+        mock_now: MagicMock = MagicMock()
+        mock_now.hour = 23
+        mock_now.minute = 59
+        with patch("src.ui.interface_app.datetime") as mock_dt:
+            mock_dt.now.return_value = mock_now
+            app._set_datetime(timezone=tz)
+            mock_view.set_time.assert_called_once_with("23:59 PM")
+
+    def test_set_datetime_midnight_is_am(self, root: tk.Tk) -> None:
+        config: DefaultConfig = DefaultConfig()
+        mock_view: MagicMock = MagicMock()
+        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+            app: InterfaceApp = InterfaceApp(root=root, config=config)
+
+        tz = pytz.timezone("UTC")
+        mock_now: MagicMock = MagicMock()
+        mock_now.hour = 0
+        mock_now.minute = 0
+        with patch("src.ui.interface_app.datetime") as mock_dt:
+            mock_dt.now.return_value = mock_now
+            app._set_datetime(timezone=tz)
+            mock_view.set_time.assert_called_once_with("00:00 AM")
+
+    def test_get_weather_calls_set_weather_when_data_returned(self, root: tk.Tk) -> None:
+        config: DefaultConfig = DefaultConfig()
+        mock_view: MagicMock = MagicMock()
+        mock_view.get_place.return_value = "Buenos Aires"
+        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+            app: InterfaceApp = InterfaceApp(root=root, config=config)
+
+        location_data: dict[str, Any] = {"timezone": "UTC", "latitude": -34.6, "longitude": -58.4}
+        weather_data: dict[str, Any] = {
+            "main": {"temp": 300.0, "feels_like": 298.0, "humidity": 60, "pressure": 1010},
+            "wind": {"speed": 5.0},
+            "weather": [{"description": "clear sky"}],
+        }
+
+        with (
+            patch.object(app._weather_service, "get_place_information", return_value=location_data),
+            patch.object(app._weather_service, "get_weather_by_location", return_value=weather_data),
+            patch.object(app, "_set_datetime"),
+        ):
+            app._get_weather()
+            mock_view.set_weather.assert_called_once()
+
+    def test_get_weather_returns_early_when_no_weather_data(self, root: tk.Tk) -> None:
+        config: DefaultConfig = DefaultConfig()
+        mock_view: MagicMock = MagicMock()
+        mock_view.get_place.return_value = "Buenos Aires"
+        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+            app: InterfaceApp = InterfaceApp(root=root, config=config)
+
+        location_data: dict[str, Any] = {"timezone": "UTC", "latitude": -34.6, "longitude": -58.4}
+
+        with (
+            patch.object(app._weather_service, "get_place_information", return_value=location_data),
+            patch.object(app._weather_service, "get_weather_by_location", return_value={}),
+            patch.object(app, "_set_datetime"),
+        ):
+            app._get_weather()
+            mock_view.set_weather.assert_not_called()
