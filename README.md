@@ -6,22 +6,6 @@ This project was created primarily for **educational and learning purposes**.
 While it is well-structured and could technically be used in production, it is **not intended for commercialization**.  
 The main goal is to explore and demonstrate best practices, patterns, and technologies in software development.
 
-## Getting Started
-
-1. Clone the repository
-2. Go to the repository folder and execute: `python -m venv venv`
-3. Execute in Windows: `venv\Scripts\activate`
-4. Execute in Linux/Mac: `source venv/bin/activate`
-5. Execute: `pip install -r requirements.txt`
-6. Execute: `pip install -r requirements.dev.txt`
-7. Execute: `pip install -r requirements.test.txt`
-8. Use `python app.py` or `python -m src` to execute the program
-
-### Pre-Commit for Development
-
-1. Once you're inside the virtual environment, let's install the hooks specified in the pre-commit. Execute: `pre-commit install`
-2. Now every time you try to commit, the pre-commit lint will run. If you want to do it manually, you can run the command: `pre-commit run --all-files`
-
 ## Description
 
 **Nimbus** is a desktop weather application built with Python and Tkinter that lets you look up real-time weather conditions for any city in the world. You type a city name into the search bar, and the app resolves its coordinates using the OpenStreetMap Nominatim geocoding service, then fetches live atmospheric data from the OpenWeatherMap REST API.
@@ -36,6 +20,8 @@ Under the hood, the app follows a clean layered architecture: a `WeatherService`
 2. Tkinter
 
 ## Libraries used
+
+The dependencies are split across multiple requirements files to keep runtime, development, testing, and build concerns isolated.
 
 #### Requirements.txt
 
@@ -70,11 +56,46 @@ pytest-xdist==3.5.0
 pyinstaller==6.16.0
 ```
 
-## Portfolio Link
+## Getting Started
 
-[`https://www.diegolibonati.com.ar/#/project/nimbus`](https://www.diegolibonati.com.ar/#/project/nimbus)
+With the stack and dependencies in mind, follow these steps to set up the project locally.
+
+1. Clone the repository
+2. Go to the repository folder and execute: `python -m venv venv`
+3. Execute in Windows: `venv\Scripts\activate`
+4. Execute in Linux/Mac: `source venv/bin/activate`
+5. Copy the example env file so the app can load its configuration:
+   - Windows: `copy .env.example.dev .env`
+   - Linux/Mac: `cp .env.example.dev .env`
+
+   See [Env Keys](#env-keys) below for what each variable means and which ones you need to fill in.
+6. Execute: `pip install -r requirements.txt`
+7. Execute: `pip install -r requirements.dev.txt`
+8. Execute: `pip install -r requirements.test.txt`
+9. Use `python app.py` or `python -m src` to execute the program
+
+### Pre-Commit for Development
+
+1. Once you're inside the virtual environment, let's install the hooks specified in the pre-commit. Execute: `pre-commit install`
+2. Now every time you try to commit, the pre-commit lint will run. If you want to do it manually, you can run the command: `pre-commit run --all-files`
+
+## Env Keys
+
+The `.env` file you just copied defines the variables below. You'll need to provide your own `API_KEY` from [openweathermap.org](https://openweathermap.org/) before the app can fetch weather data.
+
+1. `ENVIRONMENT`: Defines the application environment. Accepts `development`, `production`, or `testing`.
+2. `API_KEY`: Your api key from api.openweathermap.
+3. `API_URL`: Url from api.openweathermap.org.
+
+```
+ENVIRONMENT=development
+API_KEY=YOUR_API_KEY
+API_URL=https://api.openweathermap.org/data/2.5
+```
 
 ## Testing
+
+With the environment configured, you can verify everything works by running the test suite.
 
 1. Go to the repository folder
 2. Execute: `python -m venv venv`
@@ -84,9 +105,18 @@ pyinstaller==6.16.0
 6. Execute: `pip install -r requirements.test.txt`
 7. Execute: `pytest --log-cli-level=INFO`
 
+## Security Audit
+
+In addition to functional tests, you can check your dependencies for known vulnerabilities using **pip-audit**.
+
+1. Go to the repository folder
+2. Activate your virtual environment
+3. Execute: `pip install -r requirements.dev.txt`
+4. Execute: `pip-audit -r requirements.txt`
+
 ## Build
 
-You can generate a standalone executable (`.exe` on Windows, or binary on Linux/Mac) using **PyInstaller**.
+Once the codebase is tested and audited, you can generate a standalone executable (`.exe` on Windows, or binary on Linux/Mac) using **PyInstaller**.
 
 ### Windows
 
@@ -106,27 +136,10 @@ Alternatively, you can run the helper script: `build.bat`
 
 Alternatively, you can run the helper script: `./build.sh`
 
-## Security Audit
-
-You can check your dependencies for known vulnerabilities using **pip-audit**.
-
-1. Go to the repository folder
-2. Activate your virtual environment
-3. Execute: `pip install -r requirements.dev.txt`
-4. Execute: `pip-audit -r requirements.txt`
-
-## Env Keys
-
-1. `ENVIRONMENT`: Defines the application environment. Accepts `development`, `production`, or `testing`.
-2. `API_KEY`: Your api key from api.openweathermap.
-3. `API_URL`: Url from api.openweathermap.org.
-
-```
-ENVIRONMENT=development
-API_KEY=YOUR_API_KEY
-API_URL=https://api.openweathermap.org/data/2.5
-```
-
 ## Known Issues
 
 None at the moment.
+
+## Portfolio Link
+
+[`https://www.diegolibonati.com.ar/#/project/nimbus`](https://www.diegolibonati.com.ar/#/project/nimbus)
