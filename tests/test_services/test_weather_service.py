@@ -67,7 +67,9 @@ class TestWeatherService:
         mock_response: MagicMock = MagicMock()
         mock_response.json.return_value = {"weather": [{"description": "clear sky"}]}
         with patch("src.services.weather_service.requests.get", return_value=mock_response):
-            result: dict[str, Any] = service.get_weather_by_location(longitude=-58.4, latitude=-34.6)
+            result: dict[str, Any] = service.get_weather_by_location(
+                longitude=-58.4, latitude=-34.6
+            )
             assert result == {"weather": [{"description": "clear sky"}]}
 
     def test_get_weather_by_location_raises_validation_on_zero_coords(self) -> None:
@@ -80,6 +82,11 @@ class TestWeatherService:
         with pytest.raises(ValidationDialogError):
             service.get_weather_by_location(longitude=0.0, latitude=-34.6)
 
+    def test_get_weather_by_location_raises_validation_on_zero_latitude(self) -> None:
+        service: WeatherService = WeatherService(api_key="key", api_url="http://api.example.com")
+        with pytest.raises(ValidationDialogError):
+            service.get_weather_by_location(longitude=-58.4, latitude=0.0)
+
     def test_get_weather_by_location_raises_internal_on_empty_api_key(self) -> None:
         service: WeatherService = WeatherService(api_key="", api_url="http://api.example.com")
         with pytest.raises(InternalDialogError):
@@ -89,7 +96,9 @@ class TestWeatherService:
         service: WeatherService = WeatherService(api_key="my_key", api_url="http://api.example.com")
         mock_response: MagicMock = MagicMock()
         mock_response.json.return_value = {}
-        with patch("src.services.weather_service.requests.get", return_value=mock_response) as mock_get:
+        with patch(
+            "src.services.weather_service.requests.get", return_value=mock_response
+        ) as mock_get:
             service.get_weather_by_location(longitude=-58.4, latitude=-34.6)
             called_url: str = mock_get.call_args.kwargs["url"]
             assert "lat=-34.6" in called_url
@@ -98,7 +107,9 @@ class TestWeatherService:
         service: WeatherService = WeatherService(api_key="my_key", api_url="http://api.example.com")
         mock_response: MagicMock = MagicMock()
         mock_response.json.return_value = {}
-        with patch("src.services.weather_service.requests.get", return_value=mock_response) as mock_get:
+        with patch(
+            "src.services.weather_service.requests.get", return_value=mock_response
+        ) as mock_get:
             service.get_weather_by_location(longitude=-58.4, latitude=-34.6)
             called_url: str = mock_get.call_args.kwargs["url"]
             assert "lon=-58.4" in called_url
@@ -107,7 +118,9 @@ class TestWeatherService:
         service: WeatherService = WeatherService(api_key="my_key", api_url="http://api.example.com")
         mock_response: MagicMock = MagicMock()
         mock_response.json.return_value = {}
-        with patch("src.services.weather_service.requests.get", return_value=mock_response) as mock_get:
+        with patch(
+            "src.services.weather_service.requests.get", return_value=mock_response
+        ) as mock_get:
             service.get_weather_by_location(longitude=-58.4, latitude=-34.6)
             called_url: str = mock_get.call_args.kwargs["url"]
             assert "appid=my_key" in called_url

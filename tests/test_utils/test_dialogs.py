@@ -68,6 +68,13 @@ class TestBaseDialog:
             dialog.open()
             mock_fn.assert_called_once_with("Error", "Test")
 
+    def test_open_with_unknown_dialog_type_calls_showerror_fallback(self) -> None:
+        dialog: BaseDialog = BaseDialog()
+        dialog.dialog_type = "UNKNOWN"
+        with patch("src.utils.dialogs.messagebox.showerror") as mock_showerror:
+            dialog.open()
+            mock_showerror.assert_called_once()
+
 
 class TestBaseDialogError:
     def test_is_exception(self) -> None:

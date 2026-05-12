@@ -1,4 +1,5 @@
-from tkinter import Frame, Label, PhotoImage, StringVar, Tk
+from collections.abc import Callable
+from tkinter import Frame, Label, Misc, PhotoImage, StringVar
 from typing import Any
 
 from src.ui.components.search_bar import SearchBar
@@ -9,9 +10,9 @@ from src.ui.styles import Styles
 class MainView(Frame):
     def __init__(
         self,
-        root: Tk,
+        root: Misc,
         styles: Styles,
-        on_search: callable,
+        on_search: Callable[[], None],
         img_search: PhotoImage,
         img_search_icon: PhotoImage,
         img_logo: PhotoImage,
@@ -103,5 +104,7 @@ class MainView(Frame):
 
     def set_weather(self, parsed: dict[str, Any]) -> None:
         self._label_degrees.set(f"{parsed['temp']}°")
-        self._label_thermal_sensation.set(f"{parsed['description']} | FEELS LIKE {parsed['feels_like']}°")
+        self._label_thermal_sensation.set(
+            f"{parsed['description']} | FEELS LIKE {parsed['feels_like']}°"
+        )
         self._weather_information.set_values(parsed)

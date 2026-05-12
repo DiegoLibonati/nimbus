@@ -3,6 +3,30 @@ name = "nimbus"
 version = "1.0.0"
 description = "Nimbus is a desktop weather application built with Python and Tkinter that lets you look up real-time weather conditions for any city in the world."
 requires-python = ">=3.11"
+dependencies = [
+    "geopy>=2.4",
+    "pytz>=2025.1",
+    "requests>=2.32",
+    "timezonefinder>=8.0",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit>=4.0",
+    "pip-audit>=2.7",
+    "ruff>=0.11",
+]
+test = [
+    "pytest>=8.0",
+    "pytest-env>=1.1",
+    "pytest-cov>=4.1",
+    "pytest-timeout>=2.3",
+    "pytest-xdist>=3.5",
+]
+build = [
+    "pyinstaller>=6.0",
+]
 
 [tool.pytest.ini_options]
 pythonpath = "."
@@ -29,7 +53,7 @@ env = [
 ]
 
 [tool.ruff]
-line-length = 160
+line-length = 100
 exclude = [".git", "__pycache__", "env", "venv"]
 
 [tool.ruff.lint]
