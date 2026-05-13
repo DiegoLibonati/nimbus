@@ -34,6 +34,30 @@ jobs:
       - name: pip-audit
         run: pip-audit --skip-editable
 
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Set up Python
+        uses: actions/setup-python@v5.5.0
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Upgrade pip
+        run: pip install --upgrade pip
+
+      - name: Install test dependencies
+        run: pip install -e ".[test]"
+
+      - name: Install Tkinter and virtual display
+        run: sudo apt-get install -y python3-tk xvfb
+
+      - name: Run tests
+        run: xvfb-run python -m pytest --tb=short
+
   build:
     runs-on: ubuntu-latest
 
