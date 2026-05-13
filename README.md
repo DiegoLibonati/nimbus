@@ -125,7 +125,7 @@ In addition to functional tests, you can check your dependencies for known vulne
 
 Once the codebase is tested and audited, you can generate a standalone executable (`.exe` on Windows, or binary on Linux/Mac) using **PyInstaller**.
 
-> **Security warning:** The `.env` file is bundled into the executable by `app.spec`. Never run PyInstaller with a `.env` that contains real production secrets — those values will be embedded inside the distributed binary. For production builds, copy `.env.example.prod` to a separate file (e.g. `.env.prod`), fill in the real values, and update the `datas` entry in `app.spec` to reference that file instead of `.env`.
+> **Security warning:** The `.env` file is bundled into the executable by `app.spec`. Never run PyInstaller with a `.env` that contains real production secrets — those values will be embedded inside the distributed binary. For production builds, set the real production values directly in `.env` only on the machine performing the build, and never commit that file to version control.
 
 ### Windows
 

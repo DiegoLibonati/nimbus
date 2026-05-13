@@ -1,13 +1,13 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+# WARNING: The .env file below is bundled into the executable. Never run
+# PyInstaller with a .env that contains real production secrets — those values
+# will be embedded inside the distributed binary.
+
 a = Analysis(
     ['app.py'],
     pathex=[],
     binaries=[],
-    # SECURITY: The .env file below is bundled into the executable. Never run
-    # PyInstaller with a .env that contains real production secrets. Create a
-    # separate production-only file (e.g. copy .env.example.prod → .env.prod)
-    # and reference that here to avoid embedding secrets in the distributed binary.
     datas=[('src/assets', 'src/assets'), ('.env', '.')],
     hiddenimports=[],
     hookspath=[],
