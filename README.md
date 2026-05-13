@@ -21,9 +21,9 @@ Under the hood, the app follows a clean layered architecture: a `WeatherService`
 
 ## Libraries used
 
-The dependencies are split across multiple requirements files to keep runtime, development, testing, and build concerns isolated.
+The dependencies are declared in `pyproject.toml` and split into groups to keep runtime, development, testing, and build concerns isolated. The `requirements*.txt` files are thin wrappers that delegate to those groups.
 
-#### Requirements.txt
+#### Runtime (`[project.dependencies]`)
 
 ```
 geopy==2.4.1
@@ -33,14 +33,15 @@ timezonefinder==8.0.0
 python-dotenv==1.0.1
 ```
 
-#### Requirements.dev.txt
+#### Dev (`[project.optional-dependencies] dev`)
+
 ```
 pre-commit==4.3.0
 pip-audit==2.7.3
 ruff==0.11.12
 ```
 
-#### Requirements.test.txt
+#### Test (`[project.optional-dependencies] test`)
 
 ```
 pytest==8.4.2
@@ -50,7 +51,7 @@ pytest-timeout==2.3.1
 pytest-xdist==3.5.0
 ```
 
-#### Requirements.build.txt
+#### Build (`[project.optional-dependencies] build`)
 
 ```
 pyinstaller==6.16.0
@@ -72,6 +73,8 @@ With the stack and dependencies in mind, follow these steps to set up the projec
 6. Execute: `pip install -r requirements.txt`
 7. Execute: `pip install -r requirements.dev.txt`
 8. Execute: `pip install -r requirements.test.txt`
+
+   Alternatively, install all groups at once: `pip install -e .[dev,test]`
 9. Use `python app.py` or `python -m src` to execute the program
 
 ### Pre-Commit for Development
@@ -103,6 +106,8 @@ With the environment configured, you can verify everything works by running the 
 4. Execute in Linux/Mac: `source venv/bin/activate`
 5. Execute: `pip install -r requirements.txt`
 6. Execute: `pip install -r requirements.test.txt`
+
+   Alternatively: `pip install -e .[test]`
 7. Execute: `pytest --log-cli-level=INFO`
 
 ## Security Audit
@@ -112,6 +117,8 @@ In addition to functional tests, you can check your dependencies for known vulne
 1. Go to the repository folder
 2. Activate your virtual environment
 3. Execute: `pip install -r requirements.dev.txt`
+
+   Alternatively: `pip install -e .[dev]`
 4. Execute: `pip-audit -r requirements.txt`
 
 ## Build
@@ -124,7 +131,7 @@ Once the codebase is tested and audited, you can generate a standalone executabl
 
 1. Go to the repository folder
 2. Activate your virtual environment: `venv\Scripts\activate`
-3. Install build dependencies: `pip install -r requirements.build.txt`
+3. Install build dependencies: `pip install -r requirements.build.txt` (or `pip install -e .[build]`)
 4. Create the executable: `pyinstaller app.spec`
 
 Alternatively, you can run the helper script: `build.bat`
@@ -133,7 +140,7 @@ Alternatively, you can run the helper script: `build.bat`
 
 1. Go to the repository folder
 2. Activate your virtual environment: `source venv/bin/activate`
-3. Install build dependencies: `pip install -r requirements.build.txt`
+3. Install build dependencies: `pip install -r requirements.build.txt` (or `pip install -e .[build]`)
 4. Create the executable: `pyinstaller app.spec`
 
 Alternatively, you can run the helper script: `./build.sh`
