@@ -28,9 +28,9 @@ The dependencies are declared in `pyproject.toml` and split into groups to keep 
 ```
 geopy==2.4.1
 pytz==2025.2
-requests==2.32.5
+requests==2.33.0
 timezonefinder==8.0.0
-python-dotenv==1.0.1
+python-dotenv==1.2.2
 ```
 
 #### Dev (`[project.optional-dependencies]` dev)
@@ -44,7 +44,7 @@ ruff==0.11.12
 #### Test (`[project.optional-dependencies]` test)
 
 ```
-pytest==8.4.2
+pytest==9.0.3
 pytest-env==1.1.5
 pytest-cov==4.1.0
 pytest-timeout==2.3.1
