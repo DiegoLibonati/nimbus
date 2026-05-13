@@ -22,7 +22,9 @@ class TestDefaultConfig:
         assert config.API_KEY == "YOUR_API_KEY"
 
     def test_default_api_url(self) -> None:
-        env_without_api_url: dict[str, str] = {k: v for k, v in os.environ.items() if k != "API_URL"}
+        env_without_api_url: dict[str, str] = {
+            k: v for k, v in os.environ.items() if k != "API_URL"
+        }
         with patch.dict("os.environ", env_without_api_url, clear=True):
             config: DefaultConfig = DefaultConfig()
             assert config.API_URL == "YOUR_API_URL"

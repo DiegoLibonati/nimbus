@@ -14,14 +14,20 @@ class TestInterfaceApp:
     def test_instantiation(self, root: tk.Tk) -> None:
         config: DefaultConfig = DefaultConfig()
         mock_view: MagicMock = MagicMock()
-        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+        with (
+            patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.MainView", return_value=mock_view),
+        ):
             app: InterfaceApp = InterfaceApp(root=root, config=config)
         assert app is not None
 
     def test_stores_config(self, root: tk.Tk) -> None:
         config: DefaultConfig = DefaultConfig()
         mock_view: MagicMock = MagicMock()
-        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+        with (
+            patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.MainView", return_value=mock_view),
+        ):
             app: InterfaceApp = InterfaceApp(root=root, config=config)
         assert app._config is config
 
@@ -29,7 +35,10 @@ class TestInterfaceApp:
         config: DefaultConfig = DefaultConfig()
         mock_view: MagicMock = MagicMock()
         mock_view.get_place.return_value = ""
-        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+        with (
+            patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.MainView", return_value=mock_view),
+        ):
             app: InterfaceApp = InterfaceApp(root=root, config=config)
         with pytest.raises(ValidationDialogError):
             app._get_weather()
@@ -38,9 +47,14 @@ class TestInterfaceApp:
         config: DefaultConfig = DefaultConfig()
         mock_view: MagicMock = MagicMock()
         mock_view.get_place.return_value = "Buenos Aires"
-        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+        with (
+            patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.MainView", return_value=mock_view),
+        ):
             app: InterfaceApp = InterfaceApp(root=root, config=config)
-        with patch.object(app._weather_service, "get_place_information", return_value=None) as mock_service:
+        with patch.object(
+            app._weather_service, "get_place_information", return_value=None
+        ) as mock_service:
             app._get_weather()
             mock_service.assert_called_once_with("Buenos Aires")
 
@@ -48,7 +62,10 @@ class TestInterfaceApp:
         config: DefaultConfig = DefaultConfig()
         mock_view: MagicMock = MagicMock()
         mock_view.get_place.return_value = "London"
-        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+        with (
+            patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.MainView", return_value=mock_view),
+        ):
             app: InterfaceApp = InterfaceApp(root=root, config=config)
         with patch.object(app._weather_service, "get_place_information", return_value=None):
             app._get_weather()
@@ -58,7 +75,10 @@ class TestInterfaceApp:
         config: DefaultConfig = DefaultConfig()
         mock_view: MagicMock = MagicMock()
         mock_view.get_place.return_value = "London"
-        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+        with (
+            patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.MainView", return_value=mock_view),
+        ):
             app: InterfaceApp = InterfaceApp(root=root, config=config)
         with patch.object(app._weather_service, "get_place_information", return_value=None):
             with patch.object(app._weather_service, "get_weather_by_location") as mock_weather:
@@ -68,7 +88,10 @@ class TestInterfaceApp:
     def test_set_datetime_sets_am_suffix_for_morning_hours(self, root: tk.Tk) -> None:
         config: DefaultConfig = DefaultConfig()
         mock_view: MagicMock = MagicMock()
-        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+        with (
+            patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.MainView", return_value=mock_view),
+        ):
             app: InterfaceApp = InterfaceApp(root=root, config=config)
 
         tz = pytz.timezone("UTC")
@@ -83,7 +106,10 @@ class TestInterfaceApp:
     def test_set_datetime_sets_pm_suffix_for_afternoon_hours(self, root: tk.Tk) -> None:
         config: DefaultConfig = DefaultConfig()
         mock_view: MagicMock = MagicMock()
-        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+        with (
+            patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.MainView", return_value=mock_view),
+        ):
             app: InterfaceApp = InterfaceApp(root=root, config=config)
 
         tz = pytz.timezone("UTC")
@@ -98,7 +124,10 @@ class TestInterfaceApp:
     def test_set_datetime_boundary_hour_12_is_pm(self, root: tk.Tk) -> None:
         config: DefaultConfig = DefaultConfig()
         mock_view: MagicMock = MagicMock()
-        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+        with (
+            patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.MainView", return_value=mock_view),
+        ):
             app: InterfaceApp = InterfaceApp(root=root, config=config)
 
         tz = pytz.timezone("UTC")
@@ -113,7 +142,10 @@ class TestInterfaceApp:
     def test_set_datetime_boundary_hour_23_is_pm(self, root: tk.Tk) -> None:
         config: DefaultConfig = DefaultConfig()
         mock_view: MagicMock = MagicMock()
-        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+        with (
+            patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.MainView", return_value=mock_view),
+        ):
             app: InterfaceApp = InterfaceApp(root=root, config=config)
 
         tz = pytz.timezone("UTC")
@@ -128,7 +160,10 @@ class TestInterfaceApp:
     def test_set_datetime_midnight_is_am(self, root: tk.Tk) -> None:
         config: DefaultConfig = DefaultConfig()
         mock_view: MagicMock = MagicMock()
-        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+        with (
+            patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.MainView", return_value=mock_view),
+        ):
             app: InterfaceApp = InterfaceApp(root=root, config=config)
 
         tz = pytz.timezone("UTC")
@@ -144,7 +179,10 @@ class TestInterfaceApp:
         config: DefaultConfig = DefaultConfig()
         mock_view: MagicMock = MagicMock()
         mock_view.get_place.return_value = "Buenos Aires"
-        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+        with (
+            patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.MainView", return_value=mock_view),
+        ):
             app: InterfaceApp = InterfaceApp(root=root, config=config)
 
         location_data: dict[str, Any] = {"timezone": "UTC", "latitude": -34.6, "longitude": -58.4}
@@ -156,7 +194,9 @@ class TestInterfaceApp:
 
         with (
             patch.object(app._weather_service, "get_place_information", return_value=location_data),
-            patch.object(app._weather_service, "get_weather_by_location", return_value=weather_data),
+            patch.object(
+                app._weather_service, "get_weather_by_location", return_value=weather_data
+            ),
             patch.object(app, "_set_datetime"),
         ):
             app._get_weather()
@@ -166,7 +206,10 @@ class TestInterfaceApp:
         config: DefaultConfig = DefaultConfig()
         mock_view: MagicMock = MagicMock()
         mock_view.get_place.return_value = "Buenos Aires"
-        with patch("src.ui.interface_app.PhotoImage"), patch("src.ui.interface_app.MainView", return_value=mock_view):
+        with (
+            patch("src.ui.interface_app.PhotoImage"),
+            patch("src.ui.interface_app.MainView", return_value=mock_view),
+        ):
             app: InterfaceApp = InterfaceApp(root=root, config=config)
 
         location_data: dict[str, Any] = {"timezone": "UTC", "latitude": -34.6, "longitude": -58.4}

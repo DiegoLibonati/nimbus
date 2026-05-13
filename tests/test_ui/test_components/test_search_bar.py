@@ -26,7 +26,9 @@ class TestSearchBar:
         )
         assert isinstance(bar, tk.Frame)
 
-    def test_get_place_returns_empty_by_default(self, root: tk.Tk, blank_photo: tk.PhotoImage) -> None:
+    def test_get_place_returns_empty_by_default(
+        self, root: tk.Tk, blank_photo: tk.PhotoImage
+    ) -> None:
         bar: SearchBar = SearchBar(
             parent=root,
             styles=Styles(),

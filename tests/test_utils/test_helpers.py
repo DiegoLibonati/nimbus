@@ -83,7 +83,14 @@ class TestParseWeatherData:
 
     def test_output_has_all_expected_keys(self) -> None:
         result: dict[str, Any] = parse_weather_data(self._sample_data())
-        expected_keys: list[str] = ["temp", "feels_like", "wind", "description", "humidity", "pressure"]
+        expected_keys: list[str] = [
+            "temp",
+            "feels_like",
+            "wind",
+            "description",
+            "humidity",
+            "pressure",
+        ]
         for key in expected_keys:
             assert key in result
 

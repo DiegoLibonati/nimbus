@@ -49,8 +49,8 @@ jobs:
       - name: Install build dependencies
         run: pip install -e ".[build]"
 
-      - name: Create dummy .env.prod for CI
-        run: cp .env.example.prod .env.prod
+      - name: Create dummy .env for CI
+        run: cp .env.example.prod .env
 
       - name: Build executable
         run: pyinstaller app.spec

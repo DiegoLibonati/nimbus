@@ -2,7 +2,9 @@
 
 # ##### ERROR #####
 MESSAGE_ERROR_APP = "Internal error. Contact a developer."
-MESSAGE_ERROR_GEOCODING_SERVICE_UNAVAILABLE = "Geocoding service unavailable. Please try again later."
+MESSAGE_ERROR_GEOCODING_SERVICE_UNAVAILABLE = (
+    "Geocoding service unavailable. Please try again later."
+)
 
 # ##### NOT #####
 

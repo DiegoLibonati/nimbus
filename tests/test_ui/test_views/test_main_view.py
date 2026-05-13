@@ -35,7 +35,9 @@ class TestMainView:
         view: MainView = self._make_view(root, blank_photo)
         assert isinstance(view, tk.Frame)
 
-    def test_label_current_weather_initialized_empty(self, root: tk.Tk, blank_photo: tk.PhotoImage) -> None:
+    def test_label_current_weather_initialized_empty(
+        self, root: tk.Tk, blank_photo: tk.PhotoImage
+    ) -> None:
         view: MainView = self._make_view(root, blank_photo)
         assert view._label_current_weather.get() == ""
 
@@ -47,20 +49,28 @@ class TestMainView:
         view: MainView = self._make_view(root, blank_photo)
         assert view._label_degrees.get() == ""
 
-    def test_label_thermal_sensation_initialized_empty(self, root: tk.Tk, blank_photo: tk.PhotoImage) -> None:
+    def test_label_thermal_sensation_initialized_empty(
+        self, root: tk.Tk, blank_photo: tk.PhotoImage
+    ) -> None:
         view: MainView = self._make_view(root, blank_photo)
         assert view._label_thermal_sensation.get() == ""
 
-    def test_get_place_returns_empty_by_default(self, root: tk.Tk, blank_photo: tk.PhotoImage) -> None:
+    def test_get_place_returns_empty_by_default(
+        self, root: tk.Tk, blank_photo: tk.PhotoImage
+    ) -> None:
         view: MainView = self._make_view(root, blank_photo)
         assert view.get_place() == ""
 
-    def test_get_place_returns_value_from_search_bar(self, root: tk.Tk, blank_photo: tk.PhotoImage) -> None:
+    def test_get_place_returns_value_from_search_bar(
+        self, root: tk.Tk, blank_photo: tk.PhotoImage
+    ) -> None:
         view: MainView = self._make_view(root, blank_photo)
         view._search_bar._entry_place.set("Paris")
         assert view.get_place() == "Paris"
 
-    def test_set_static_labels_sets_current_weather(self, root: tk.Tk, blank_photo: tk.PhotoImage) -> None:
+    def test_set_static_labels_sets_current_weather(
+        self, root: tk.Tk, blank_photo: tk.PhotoImage
+    ) -> None:
         view: MainView = self._make_view(root, blank_photo)
         view.set_static_labels()
         assert view._label_current_weather.get() == "CURRENT WEATHER"
@@ -80,12 +90,16 @@ class TestMainView:
         view.set_weather(self._make_parsed())
         assert view._label_degrees.get() == "22°"
 
-    def test_set_weather_updates_thermal_sensation(self, root: tk.Tk, blank_photo: tk.PhotoImage) -> None:
+    def test_set_weather_updates_thermal_sensation(
+        self, root: tk.Tk, blank_photo: tk.PhotoImage
+    ) -> None:
         view: MainView = self._make_view(root, blank_photo)
         view.set_weather(self._make_parsed())
         assert view._label_thermal_sensation.get() == "clear sky | FEELS LIKE 20°"
 
-    def test_set_weather_delegates_to_weather_information(self, root: tk.Tk, blank_photo: tk.PhotoImage) -> None:
+    def test_set_weather_delegates_to_weather_information(
+        self, root: tk.Tk, blank_photo: tk.PhotoImage
+    ) -> None:
         view: MainView = self._make_view(root, blank_photo)
         parsed: dict[str, Any] = self._make_parsed()
         view.set_weather(parsed)
