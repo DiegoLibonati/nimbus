@@ -70,12 +70,8 @@ With the stack and dependencies in mind, follow these steps to set up the projec
    - Linux/Mac: `cp .env.example.dev .env`
 
    See [Env Keys](#env-keys) below for what each variable means and which ones you need to fill in.
-6. Execute: `pip install -r requirements.txt`
-7. Execute: `pip install -r requirements.dev.txt`
-8. Execute: `pip install -r requirements.test.txt`
-
-   Alternatively, install all groups at once: `pip install -e .[dev,test]`
-9. Use `python app.py` or `python -m src` to execute the program
+6. Execute: `pip install -e ".[dev,test]"`
+7. Use `python app.py` or `python -m src` to execute the program
 
 ### Pre-Commit for Development
 
@@ -104,11 +100,8 @@ With the environment configured, you can verify everything works by running the 
 2. Execute: `python -m venv venv`
 3. Execute in Windows: `venv\Scripts\activate`
 4. Execute in Linux/Mac: `source venv/bin/activate`
-5. Execute: `pip install -r requirements.txt`
-6. Execute: `pip install -r requirements.test.txt`
-
-   Alternatively: `pip install -e .[test]`
-7. Execute: `pytest --log-cli-level=INFO`
+5. Execute: `pip install -e ".[test]"`
+6. Execute: `pytest --log-cli-level=INFO`
 
 ## Security Audit
 
@@ -116,9 +109,7 @@ In addition to functional tests, you can check your dependencies for known vulne
 
 1. Go to the repository folder
 2. Activate your virtual environment
-3. Execute: `pip install -r requirements.dev.txt`
-
-   Alternatively: `pip install -e .[dev]`
+3. Execute: `pip install -e ".[dev]"`
 4. Execute: `pip-audit -r requirements.txt`
 
 ## Build
@@ -131,7 +122,7 @@ Once the codebase is tested and audited, you can generate a standalone executabl
 
 1. Go to the repository folder
 2. Activate your virtual environment: `venv\Scripts\activate`
-3. Install build dependencies: `pip install -r requirements.build.txt` (or `pip install -e .[build]`)
+3. Install build dependencies: `pip install -e ".[build]"`
 4. Create the executable: `pyinstaller app.spec`
 
 Alternatively, you can run the helper script: `build.bat`
@@ -140,7 +131,7 @@ Alternatively, you can run the helper script: `build.bat`
 
 1. Go to the repository folder
 2. Activate your virtual environment: `source venv/bin/activate`
-3. Install build dependencies: `pip install -r requirements.build.txt` (or `pip install -e .[build]`)
+3. Install build dependencies: `pip install -e ".[build]"`
 4. Create the executable: `pyinstaller app.spec`
 
 Alternatively, you can run the helper script: `./build.sh`
