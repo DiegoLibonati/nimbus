@@ -10,7 +10,7 @@ logger = setup_logger("nimbus - tkinter_exception_hook")
 def tkinter_exception_hook(
     exc_type: type[BaseException],
     exc_value: BaseException,
-    exc_tb: types.TracebackType,
+    exc_tb: types.TracebackType | None,
 ) -> None:
     # error_detail: str = "".join(traceback.format_exception(exc_type, exc_value, exc_tb))
     # logger.error("Unhandled exception:\n%s", error_detail)

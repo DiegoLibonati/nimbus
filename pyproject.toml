@@ -16,6 +16,9 @@ dev = [
     "pre-commit==4.3.0",
     "pip-audit==2.7.3",
     "ruff==0.11.12",
+    "mypy==1.13.0",
+    "types-requests==2.32.0.20241016",
+    "types-pytz==2025.2.0.20250516",
 ]
 test = [
     "pytest==9.0.3",
@@ -66,3 +69,12 @@ ignore = ["E203"]
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+
+[tool.mypy]
+python_version = "3.11"
+strict = false
+exclude = ["venv", "tests"]
+
+[[tool.mypy.overrides]]
+module = ["geopy.*", "timezonefinder"]
+ignore_missing_imports = true

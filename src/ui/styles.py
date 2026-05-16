@@ -1,4 +1,5 @@
 from tkinter import BOTTOM, CENTER, FLAT
+from typing import Final
 
 
 class Styles:
@@ -19,14 +20,14 @@ class Styles:
 
     FONT_POPPINS_BOLD_25 = f"{FONT_POPPINS} 25 bold"
 
-    CENTER = CENTER
+    CENTER: Final = CENTER
 
-    JUSTIFY_CENTER = CENTER
+    JUSTIFY_CENTER: Final = CENTER
 
-    SIDE_BOTTOM = BOTTOM
+    SIDE_BOTTOM: Final = BOTTOM
 
-    ANCHOR_CENTER = CENTER
+    ANCHOR_CENTER: Final = CENTER
 
-    RELIEF_FLAT = FLAT
+    RELIEF_FLAT: Final = FLAT
 
     CURSOR_HAND2 = "hand2"

@@ -1,3 +1,4 @@
+from collections.abc import Callable
 from tkinter import Button, Entry, Frame, Label, Misc, PhotoImage, StringVar
 
 from src.ui.styles import Styles
@@ -10,7 +11,7 @@ class SearchBar(Frame):
         styles: Styles,
         img_search: PhotoImage,
         img_search_icon: PhotoImage,
-        on_search: callable,
+        on_search: Callable[[], None],
     ) -> None:
         super().__init__(parent, bg=styles.PRIMARY_COLOR)
         self._styles = styles

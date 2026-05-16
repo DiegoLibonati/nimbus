@@ -24,9 +24,6 @@ def parse_weather_data(data: dict[str, Any]) -> dict[str, Any]:
 
 
 def resource_path(relative_path: str) -> str:
-    try:
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
+    base_path = getattr(sys, "_MEIPASS", os.path.abspath("."))
 
     return os.path.join(base_path, relative_path)
