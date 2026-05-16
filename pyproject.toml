@@ -1,6 +1,6 @@
 [project]
 name = "nimbus"
-version = "1.0.0"
+version = "1.1.0"
 description = "Nimbus is a desktop weather application built with Python and Tkinter that lets you look up real-time weather conditions for any city in the world."
 requires-python = ">=3.11"
 dependencies = [
